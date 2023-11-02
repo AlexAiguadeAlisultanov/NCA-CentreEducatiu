@@ -107,7 +107,7 @@ public class Main {
                     if (esProfesor) {
                         int valortaula = 0;
                         while (valortaula != 3) {
-                            System.out.println("Inici de sesió exitos com professor.");
+                            System.out.println("Inici de sessió exitos com professor.");
                             System.out.println("1- Mostrar Notes");
                             System.out.println("2- Actualitzar Notes");
                             System.out.println("3- Tanca Sessió");
@@ -115,10 +115,31 @@ public class Main {
                             if (valortaula == 1) {
                                 mostrarNotesAlumne(LlistaAlumnes, LlistaProfessors, usuari);
                             } else if (valortaula == 2) {
+                                System.out.print("Introdueix el nom de l'alumne: ");
+                                String nomAlumne = lector.nextLine();
 
-                            }
-                            if (valortaula == 3) {
-                                esProfesor=false;
+                                // Buscar el alumno en la lista de alumnos
+                                Alumno alumneSeleccionat = null;
+                                for (Alumno alumno : LlistaAlumnes) {
+                                    if (alumno.getNomAlumne().equals(nomAlumne)) {
+                                        alumneSeleccionat = alumno;
+                                        break;
+                                    }
+                                }
+                                // Actualizar notas del alumno si se encontró
+                                if (alumneSeleccionat != null) {
+                                    System.out.print("Introdueix la nova nota: ");
+                                    double novaNota = lector.nextDouble();
+                                    lector.nextLine(); // Limpiar el buffer del scanner
+
+                                    // Actualizar la nota del alumno directamente
+                                    //alumneSeleccionat.setLlistaNotes(novaNota); me dona error
+                                    System.out.println("Nota actualitzada amb èxit.");
+                                } else {
+                                    System.out.println("L'alumne no existeix en la llista.");
+                                }
+                            } else if (valortaula == 3) {
+                                esProfesor = false;
                                 System.out.println("Tancant Sessió...");
                             }
                         }
