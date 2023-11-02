@@ -1,8 +1,6 @@
 package org.example;
 import java.io.*;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -21,46 +19,6 @@ public class Main {
         File Profesores = new File("Profesores.dat");
         File Asignaturas = new File("Asignaturas.dat");
         File Secretaria = new File("Secretaria.dat");
-        if (Alumnos.exists()) {
-            FileInputStream fis = new FileInputStream("Alumnos.dat");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            while (fis.available() > 0) {
-                Alumno Alumno1 = (Alumno) ois.readObject();
-                LlistaAlumnes.add(Alumno1);
-            }
-            ois.close();
-            fis.close();
-        }
-        if (Profesores.exists()) {
-            FileInputStream fis = new FileInputStream("Profesores.dat");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            while (fis.available() > 0) {
-                Profesor Profesor1 = (Profesor) ois.readObject();
-                LlistaProfessors.add(Profesor1);
-            }
-            ois.close();
-            fis.close();
-        }
-        if (Asignaturas.exists()) {
-            FileInputStream fis = new FileInputStream("Asignaturas.dat");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            while (fis.available() > 0) {
-                Asignatura Asignaturas1 = (Asignatura) ois.readObject();
-                LlistaAssignatura.add(Asignaturas1);
-            }
-            ois.close();
-            fis.close();
-        }
-        if (Secretaria.exists()) {
-            FileInputStream fis = new FileInputStream("Secretaria.dat");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            while (fis.available() > 0) {
-                Secretaria Secretaria1 = (Secretaria) ois.readObject();
-                LlistaSecretaria.add(Secretaria1);
-            }
-            ois.close();
-            fis.close();
-        }
         // Bucle principal que executa el programa fins que l'usuari selecciona l'opció de sortir
         while (valorTaula1 != 2) {
             // Mostra un menú d'opcions a l'usuari
@@ -68,61 +26,106 @@ public class Main {
             System.out.println("1- Log-In");
             System.out.println("2- Sortir del Centre Educatiu");
             valorTaula1 = IntroduirInt(); // Llegeix la opció de l'usuari
-
             // Comprova que la opció sigui vàlida (entre 1 i 3)
             while (valorTaula1 < 1 || valorTaula1 > 2) {
                 System.out.println("Introdueix un numero del 1 al 2");
                 valorTaula1 = IntroduirInt();
+            }
+            if (Alumnos.exists()) {
+                FileInputStream fis = new FileInputStream("Alumnos.dat");
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                while (fis.available() > 0) {
+                    Alumno Alumno1 = (Alumno) ois.readObject();
+                    LlistaAlumnes.add(Alumno1);
+                }
+                ois.close();
+                fis.close();
+            }
+            if (Profesores.exists()) {
+                FileInputStream fis = new FileInputStream("Profesores.dat");
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                while (fis.available() > 0) {
+                    Profesor Profesor1 = (Profesor) ois.readObject();
+                    LlistaProfessors.add(Profesor1);
+                }
+                ois.close();
+                fis.close();
+            }
+            if (Asignaturas.exists()) {
+                FileInputStream fis = new FileInputStream("Asignaturas.dat");
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                while (fis.available() > 0) {
+                    Asignatura Asignaturas1 = (Asignatura) ois.readObject();
+                    LlistaAssignatura.add(Asignaturas1);
+                }
+                ois.close();
+                fis.close();
+            }
+            if (Secretaria.exists()) {
+                FileInputStream fis = new FileInputStream("Secretaria.dat");
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                while (fis.available() > 0) {
+                    Secretaria Secretaria1 = (Secretaria) ois.readObject();
+                    LlistaSecretaria.add(Secretaria1);
+                }
+                ois.close();
+                fis.close();
+            }else {
+                String Usuari,Contrasenya,nomSecretaria,DNI,adreça,correu = "";
+                int telefon = 0;
+                System.out.println("Inserta un usuari Secretaria");
+                System.out.print("Introdueix el nom d'usuari: ");
+                Usuari = lector.nextLine();
+                System.out.print("Introdueix la contrasenya: ");
+                Contrasenya = lector.nextLine();
+                System.out.print("Introdueix el nom de la secretària: ");
+                nomSecretaria = lector.nextLine();
+                System.out.print("Introdueix el DNI: ");
+                DNI = lector.nextLine();
+                System.out.print("Introdueix l'adreça: ");
+                adreça = lector.nextLine();
+                System.out.print("Introdueix el correu electrònic: ");
+                correu = lector.nextLine();
+                System.out.print("Introdueix el número de telèfon: ");
+                telefon = IntroduirInt();
+                Secretaria Secretaria1 = new Secretaria(Usuari,Contrasenya,nomSecretaria,DNI,adreça,correu,telefon);
+                LlistaSecretaria.add(Secretaria1);
+                guardarSecretaris(LlistaSecretaria);
             }
             if (valorTaula1 == 1) {
                 System.out.print("Introdueix el nom d'usuari: ");
                 String usuari = lector.nextLine();
                 System.out.print("Introdueix la contrasenya: ");
                 String contrasenya = lector.nextLine();
-
                 boolean esProfesor = verificarProfessor(usuari, contrasenya, LlistaProfessors);
                 boolean esSecretaria = verificarSecretaria(usuari, contrasenya, LlistaSecretaria);
-                if (LlistaSecretaria.isEmpty()) {
-                    String Usuari,Contrasenya,nomSecretaria,DNI,adreça,correu = "";
-                    int telefon = 0;
-                    System.out.println("Inserta un usuari Secretaria");
-                    System.out.print("Introdueix el nom d'usuari: ");
-                    Usuari = lector.nextLine();
-                    System.out.print("Introdueix la contrasenya: ");
-                    Contrasenya = lector.nextLine();
-                    System.out.print("Introdueix el nom de la secretària: ");
-                    nomSecretaria = lector.nextLine();
-                    System.out.print("Introdueix el DNI: ");
-                    DNI = lector.nextLine();
-                    System.out.print("Introdueix l'adreça: ");
-                    adreça = lector.nextLine();
-                    System.out.print("Introdueix el correu electrònic: ");
-                    correu = lector.nextLine();
-                    System.out.print("Introdueix el número de telèfon: ");
-                    telefon = IntroduirInt();
-                    Secretaria Secretaria1 = new Secretaria(Usuari,Contrasenya,nomSecretaria,DNI,adreça,correu,telefon);
-                    LlistaSecretaria.add(Secretaria1);
-                    guardarSecretaris(LlistaSecretaria);
-                }else{
-                    while (esProfesor || esSecretaria) {
-                        if (esProfesor) {
-                            int valortaula = 0;
+                if (!esProfesor && !esSecretaria) {
+                    System.out.println("Inici de sesió erroni. Usuari o contrasenya incorrectes.");
+                }
+                while (esProfesor || esSecretaria) {
+                    if (esProfesor) {
+                        int valortaula = 0;
+                        while (valortaula != 3) {
                             System.out.println("Inici de sesió exitos com professor.");
                             System.out.println("1- Mostrar Notes");
                             System.out.println("2- Actualitzar Notes");
                             System.out.println("3- Tanca Sessió");
+                            valortaula = IntroduirInt();
                             if (valortaula == 1) {
                                 mostrarNotesAlumne(LlistaAlumnes, LlistaProfessors, usuari);
                             } else if (valortaula == 2) {
 
                             }
                             if (valortaula == 3) {
+                                esProfesor=false;
                                 System.out.println("Tancant Sessió...");
                             }
                         }
+                    }
+                    int valortaula = 0;
+                    while(valortaula!=13){
                         if (esSecretaria) {
                             System.out.println("Inici de sesió exitos com secretari/a.");
-                            int valortaula = 0;
                             System.out.println("1- Mostrar Alumnes");
                             System.out.println("2- Mostrar Professors");
                             System.out.println("3- Mostrar Assignatures");
@@ -136,6 +139,7 @@ public class Main {
                             System.out.println("11- Actualitzar Assignatures");
                             System.out.println("12- Actualitzar Secretaris");
                             System.out.println("13- Tanca Sessió");
+                            valortaula = IntroduirInt();
                             if (valortaula == 1) {
                                 mostrarAlumnes(LlistaAlumnes);
                             } else if (valortaula == 2) {
@@ -153,21 +157,18 @@ public class Main {
                             }else if (valortaula == 8) {
                                 InsertarSecretaris(LlistaSecretaria,lector);
                             }else if (valortaula == 9) {
-
+                                ActualitzarAlumnes();
                             }else if (valortaula == 10) {
-
+                                ActualitzarProfessors();
                             }else if (valortaula == 11) {
-
+                                ActualitzAssignatures();
                             }else if (valortaula == 12) {
-
-                            }
-                            if (valortaula == 13) {
-                                System.out.println("Tancant Sessió...");
+                                ActualitzarSecretaris();
                             }
                         }
-                    }
-                    if (!esProfesor && !esSecretaria) {
-                        System.out.println("Inici de sesió erroni. Usuari o contrasenya incorrectes.");
+                    }if (valortaula == 13) {
+                        esSecretaria = false;
+                        System.out.println("Tancant Sessió...");
                     }
                 }
             }
@@ -195,9 +196,9 @@ public class Main {
         }
     }
     private void InsertarAlumnes(ArrayList<Alumno> LlistaAlumnes,Scanner lector) throws IOException {
-        ArrayList<String> LlistaProfessors = new ArrayList<>();
-        ArrayList<String> LlistaAssignatura = new ArrayList<>();
-        ArrayList<String> LlistaNotes = new ArrayList<>();
+        ArrayList<String> LlistaProfessors1 = new ArrayList<>();
+        ArrayList<String> LlistaAssignatura1 = new ArrayList<>();
+        ArrayList<String> LlistaNotes1 = new ArrayList<>();
         System.out.print("Introdueix el nom de l'alumne: ");
         String nomAlumne = lector.nextLine();
         // Introduir el DNI de l'alumne
@@ -214,25 +215,27 @@ public class Main {
         int quantitatProfessors = IntroduirInt();
         for (int i = 0; i < quantitatProfessors; i++) {
             System.out.print("Introdueix el professor " + (i + 1) + ": ");
-            LlistaProfessors.add(lector.nextLine());
+            LlistaProfessors1.add(lector.nextLine());
         }
         // Introduir quantitat d'assignatures i afegir-les a LlistaAssignatura
         System.out.print("Quantitat d'assignatures que te l'alumne: ");
         int quantitatAssignatures = IntroduirInt();
         for (int i = 0; i < quantitatAssignatures; i++) {
             System.out.print("Introdueix l'assignatura " + (i + 1) + ": ");
-            LlistaAssignatura.add(lector.nextLine());
+            LlistaAssignatura1.add(lector.nextLine());
         }
         // Introduir quantitat de notes i afegir-les a LlistaNotes
         System.out.print("Quantitat de notes que te l'alumne: ");
         int quantitatNotes = IntroduirInt();
         for (int i = 0; i < quantitatNotes; i++) {
             System.out.print("Introdueix la nota " + (i + 1) + ": ");
-            LlistaNotes.add(lector.nextLine());
+            LlistaNotes1.add(lector.nextLine());
         }
-        Alumno Alumne = new Alumno(nomAlumne,DNI,adreça,correu,LlistaProfessors,LlistaAssignatura,LlistaNotes);
+        Alumno Alumne = new Alumno(nomAlumne,DNI,adreça,correu,LlistaProfessors1,LlistaAssignatura1,LlistaNotes1);
         LlistaAlumnes.add(Alumne);
         guardarAlumnes(LlistaAlumnes);
+    }
+    private void ActualitzarAlumnes() {
     }
     private void guardarAlumnes(ArrayList<Alumno> LlistaAlumnes) throws IOException {
         FileOutputStream fos = new FileOutputStream("Alumnos.dat");
@@ -313,6 +316,9 @@ public class Main {
         LlistaProfessors.add(Profe1);
         guardarProfessors(LlistaProfessors);
     }
+    private void ActualitzarProfessors() {
+
+    }
     private void guardarProfessors(ArrayList<Profesor> LlistaProfessors) throws IOException {
         FileOutputStream fos = new FileOutputStream("Profesores.dat");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -346,6 +352,8 @@ public class Main {
         Asignatura Assignatura1 = new Asignatura(LlistaAssignatures);
         LlistaAssignatura.add(Assignatura1);
         guardarAssignatures(LlistaAssignatura);
+    }
+    private void ActualitzAssignatures() {
     }
     private void guardarAssignatures(ArrayList<Asignatura> LlistaAssignatura) throws IOException {
         FileOutputStream fos = new FileOutputStream("Asignaturas.dat");
@@ -398,6 +406,8 @@ public class Main {
             guardarSecretaris(LlistaSecretaria);
         }
     }
+    private void ActualitzarSecretaris() {
+    }
     private void guardarSecretaris(ArrayList<Secretaria> LlistaSecretaria) throws IOException {
         FileOutputStream fos = new FileOutputStream("Secretaria.dat");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -411,7 +421,7 @@ public class Main {
         boolean esprofe = false;
         for (int i = 0; i < LlistaProfessors.size(); i++) {
             Profesor profesor = (Profesor) LlistaProfessors.get(i);
-            if ((usuario == profesor.getUsuari()) && (contraseña == profesor.getContraseña())){
+            if (usuario.equals(profesor.getUsuari()) && contraseña.equals(profesor.getContraseña())) {
                 esprofe = true;
             }else{
                 esprofe= false;
@@ -423,7 +433,7 @@ public class Main {
         boolean esSecretaria = false;
         for (int i = 0; i < LlistaSecretaria.size(); i++) {
             Secretaria Secretaria = (Secretaria) LlistaSecretaria.get(i);
-            if ((usuario == Secretaria.getUsuari()) && (contraseña == Secretaria.getContraseña())){
+            if ((usuario.equals(Secretaria.getUsuari())) && (contraseña.equals(Secretaria.getContraseña()))){
                 esSecretaria = true;
             }else{
                 esSecretaria = false;

@@ -1,8 +1,9 @@
 package org.example;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Alumno {
+public class Alumno implements Serializable {
     private String nomAlumne, DNI, adreça, correu;
     private ArrayList<String> LlistaProfessors = new ArrayList<>();
     private ArrayList<String> LlistaAssignatura = new ArrayList<>();

@@ -1,6 +1,8 @@
 package org.example;
 
-public class Secretaria {
+import java.io.Serializable;
+
+public class Secretaria implements Serializable {
     private String Usuari,Contraseña,nomSecretaria,DNI,adreça,correu;
     private int telefon;
 
