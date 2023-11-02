@@ -1,6 +1,7 @@
 package org.example;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -157,13 +158,13 @@ public class Main {
                             }else if (valortaula == 8) {
                                 InsertarSecretaris(LlistaSecretaria,lector);
                             }else if (valortaula == 9) {
-                                ActualitzarAlumnes();
+                                ActualitzarAlumnes(LlistaAlumnes,lector);
                             }else if (valortaula == 10) {
-                                ActualitzarProfessors();
+                                ActualitzarProfessors(LlistaProfessors,lector);
                             }else if (valortaula == 11) {
-                                ActualitzAssignatures();
+                                ActualitzarAssignatures(LlistaAlumnes, LlistaProfessors,lector);
                             }else if (valortaula == 12) {
-                                ActualitzarSecretaris();
+                                ActualitzarSecretaris(LlistaSecretaria,lector);
                             }
                         }
                     }if (valortaula == 13) {
@@ -235,7 +236,19 @@ public class Main {
         LlistaAlumnes.add(Alumne);
         guardarAlumnes(LlistaAlumnes);
     }
-    private void ActualitzarAlumnes() {
+    private void ActualitzarAlumnes(ArrayList<Alumno> LlistaAlumnes, Scanner lector) throws IOException {
+        System.out.print("Introdueix el DNI de l'alumne que vols actualitzar: ");
+        String DNI = lector.nextLine();
+        for (Alumno alumne : LlistaAlumnes) {
+            if (alumne.getDNI().equals(DNI)) {
+                System.out.print("Introdueix el nou nom de l'alumne: ");
+                alumne.setNomAlumne(lector.nextLine());
+                guardarAlumnes(LlistaAlumnes);
+                System.out.println("Dades de l'alumne actualitzades amb èxit.");
+                return;
+            }
+        }
+        System.out.println("No s'ha trobat cap alumne amb aquest DNI.");
     }
     private void guardarAlumnes(ArrayList<Alumno> LlistaAlumnes) throws IOException {
         FileOutputStream fos = new FileOutputStream("Alumnos.dat");
@@ -316,8 +329,20 @@ public class Main {
         LlistaProfessors.add(Profe1);
         guardarProfessors(LlistaProfessors);
     }
-    private void ActualitzarProfessors() {
-
+    private void ActualitzarProfessors(ArrayList<Profesor> LlistaProfessors, Scanner lector) throws IOException {
+        System.out.print("Introdueix el DNI del professor que vols actualitzar: ");
+        String DNI = lector.nextLine();
+        for (Profesor profesor : LlistaProfessors) {
+            if (profesor.getDNI().equals(DNI)) {
+                System.out.print("Introdueix el nou nom del professor: ");
+                profesor.setNomProfesor(lector.nextLine());
+                // Aquí puedes actualizar otros atributos del profesor si es necesario
+                guardarProfessors(LlistaProfessors); // Guardar los cambios en el archivo
+                System.out.println("Dades del professor actualitzades amb èxit.");
+                return;
+            }
+        }
+        System.out.println("No s'ha trobat cap professor amb aquest DNI.");
     }
     private void guardarProfessors(ArrayList<Profesor> LlistaProfessors) throws IOException {
         FileOutputStream fos = new FileOutputStream("Profesores.dat");
@@ -353,7 +378,45 @@ public class Main {
         LlistaAssignatura.add(Assignatura1);
         guardarAssignatures(LlistaAssignatura);
     }
-    private void ActualitzAssignatures() {
+    private void ActualitzarAssignatures(ArrayList<Alumno> LlistaAlumnes, ArrayList<Profesor> LlistaProfessors, Scanner lector) throws IOException {
+        System.out.println("Què vols actualitzar en la llista d'assignatures?");
+        System.out.println("1- Actualitzar Llista d'Alumnes");
+        System.out.println("2- Actualitzar Llista de Professors");
+        int opcio = IntroduirInt();
+
+        if (opcio == 1) {
+            // Actualizar Llista d'Alumnes
+            System.out.print("Introdueix la nova llista d'alumnes (separats per comes): ");
+            String novaLlistaAlumnes = lector.nextLine();
+            String[] alumnesArray = novaLlistaAlumnes.split(",");
+            ArrayList<String> novaLlistaAlumnesArray = new ArrayList<>(Arrays.asList(alumnesArray));
+            for (Alumno alumne : LlistaAlumnes) {
+                if (novaLlistaAlumnesArray.contains(alumne.getNomAlumne())) {
+                    alumne.setLlistaAssignatura(novaLlistaAlumnesArray);
+                }
+            }
+            System.out.println("Llista d'alumnes actualitzada amb èxit.");
+            // Guardar los cambios en el archivo LlistaAlumnes
+            guardarAlumnes(LlistaAlumnes);
+        } else if (opcio == 2) {
+            // Actualizar Llista de Professors
+            System.out.print("Introdueix la nova llista de professors (separats per comes): ");
+            String novaLlistaProfessors = lector.nextLine();
+            String[] professorsArray = novaLlistaProfessors.split(",");
+            ArrayList<String> novaLlistaProfessorsArray = new ArrayList<>(Arrays.asList(professorsArray));
+
+            for (Profesor profesor : LlistaProfessors) {
+                if (novaLlistaProfessorsArray.contains(profesor.getNomProfesor())) {
+                    profesor.setLlistaAssignatures(novaLlistaProfessorsArray);
+                }
+            }
+
+            System.out.println("Llista de professors actualitzada amb èxit.");
+            // Guardar los cambios en el archivo LlistaProfessors
+            guardarProfessors(LlistaProfessors);
+        } else {
+            System.out.println("Opció no vàlida.");
+        }
     }
     private void guardarAssignatures(ArrayList<Asignatura> LlistaAssignatura) throws IOException {
         FileOutputStream fos = new FileOutputStream("Asignaturas.dat");
@@ -406,7 +469,39 @@ public class Main {
             guardarSecretaris(LlistaSecretaria);
         }
     }
-    private void ActualitzarSecretaris() {
+    private void ActualitzarSecretaris(ArrayList<Secretaria> LlistaSecretaria, Scanner lector) throws IOException {
+        System.out.print("Introdueix el DNI de la secretària que vols actualitzar: ");
+        String DNI = lector.nextLine();
+        for (Secretaria secretaria : LlistaSecretaria) {
+            if (secretaria.getDNI().equals(DNI)) {
+                System.out.println("Què vols actualitzar?");
+                System.out.println("1- Nom");
+                System.out.println("2- Adreça");
+                System.out.println("3- Correu electrònic");
+                System.out.println("4- Número de telèfon");
+                int opcio = IntroduirInt();
+                if (opcio == 1) {
+                    System.out.print("Introdueix el nou nom de la secretària: ");
+                    secretaria.setNomSecretaria(lector.nextLine());
+                } else if (opcio == 2) {
+                    System.out.print("Introdueix la nova adreça de la secretària: ");
+                    secretaria.setAdreça(lector.nextLine());
+                } else if (opcio == 3) {
+                    System.out.print("Introdueix el nou correu electrònic de la secretària: ");
+                    secretaria.setCorreu(lector.nextLine());
+                } else if (opcio == 4) {
+                    System.out.print("Introdueix el nou número de telèfon de la secretària: ");
+                    secretaria.setTelefon(IntroduirInt());
+                } else {
+                    System.out.println("Opció no vàlida.");
+                    return;
+                }
+                guardarSecretaris(LlistaSecretaria); // Guardar los cambios en el archivo
+                System.out.println("Dades de la secretària actualitzades amb èxit.");
+                return;
+            }
+        }
+        System.out.println("No s'ha trobat cap secretària amb aquest DNI.");
     }
     private void guardarSecretaris(ArrayList<Secretaria> LlistaSecretaria) throws IOException {
         FileOutputStream fos = new FileOutputStream("Secretaria.dat");
