@@ -404,7 +404,6 @@ public class Main {
         System.out.println("1- Actualitzar Llista d'Alumnes");
         System.out.println("2- Actualitzar Llista de Professors");
         int opcio = IntroduirInt();
-
         if (opcio == 1) {
             // Actualizar Llista d'Alumnes
             System.out.print("Introdueix la nova llista d'alumnes (separats per comes): ");
@@ -425,13 +424,11 @@ public class Main {
             String novaLlistaProfessors = lector.nextLine();
             String[] professorsArray = novaLlistaProfessors.split(",");
             ArrayList<String> novaLlistaProfessorsArray = new ArrayList<>(Arrays.asList(professorsArray));
-
             for (Profesor profesor : LlistaProfessors) {
                 if (novaLlistaProfessorsArray.contains(profesor.getNomProfesor())) {
                     profesor.setLlistaAssignatures(novaLlistaProfessorsArray);
                 }
             }
-
             System.out.println("Llista de professors actualitzada amb èxit.");
             // Guardar los cambios en el archivo LlistaProfessors
             guardarProfessors(LlistaProfessors);
