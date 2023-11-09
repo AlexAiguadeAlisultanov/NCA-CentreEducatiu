@@ -3,7 +3,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-
 public class Main {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         Main gestio = new Main(); // Crea un objecte de la classe Main
@@ -100,10 +99,11 @@ public class Main {
                 String contrasenya = lector.nextLine();
                 boolean esProfesor = verificarProfessor(usuari, contrasenya, LlistaProfessors);
                 boolean esSecretaria = verificarSecretaria(usuari, contrasenya, LlistaSecretaria);
-                if (!esProfesor && !esSecretaria) {
+                boolean esalumne = verificarAlumne(usuari,contrasenya, LlistaAlumnes);
+                if (!esProfesor && !esSecretaria && !esalumne) {
                     System.out.println("Inici de sesió erroni. Usuari o contrasenya incorrectes.");
                 }
-                while (esProfesor || esSecretaria) {
+                while (esProfesor || esSecretaria || esalumne) {
                     if (esProfesor) {
                         int valortaula = 0;
                         while (valortaula != 3) {
@@ -171,9 +171,9 @@ public class Main {
                             }else if (valortaula == 4) {
                                 mostrarSecretaries(LlistaSecretaria);
                             }else if (valortaula == 5) {
-                                InsertarAlumnes(LlistaAlumnes,lector);
+                                InsertarAlumnes(LlistaAlumnes,LlistaProfessors,lector);
                             }else if (valortaula == 6) {
-                                InsertarProfessors(LlistaProfessors,lector);
+                                InsertarProfessors(LlistaAlumnes,LlistaProfessors,lector);
                             }else if (valortaula == 7) {
                                 InsertarAssignatures(LlistaAssignatura,lector);
                             }else if (valortaula == 8) {
@@ -188,8 +188,24 @@ public class Main {
                                 ActualitzarSecretaris(LlistaSecretaria,lector);
                             }
                         }
+
                     }if (valortaula == 13) {
                         esSecretaria = false;
+                        System.out.println("Tancant Sessió...");
+                    }
+                    valortaula = 0;
+                    while(valortaula!=2){
+                        if (esalumne) {
+                            System.out.println("Inici de sesió exitos com Alumne.");
+                            System.out.println("1- Mostrar Alumnes");
+                            System.out.println("2- Tancar Sessió");
+                            valortaula = IntroduirInt();
+                            if (valortaula == 1) {
+                                mostrarAlumnes(LlistaAlumnes);
+                            }
+                        }
+                    }if (valortaula == 2) {
+                        esalumne = false;
                         System.out.println("Tancant Sessió...");
                     }
                 }
@@ -217,54 +233,139 @@ public class Main {
             }
         }
     }
-    private void InsertarAlumnes(ArrayList<Alumno> LlistaAlumnes,Scanner lector) throws IOException {
+    private void InsertarAlumnes(ArrayList<Alumno> LlistaAlumnes,ArrayList<Profesor> LlistaProfessors,Scanner lector) throws IOException {
+        String Profe="";
+        int c=0;
         ArrayList<String> LlistaProfessors1 = new ArrayList<>();
         ArrayList<String> LlistaAssignatura1 = new ArrayList<>();
         ArrayList<String> LlistaNotes1 = new ArrayList<>();
-        System.out.print("Introdueix el nom de l'alumne: ");
+        System.out.println("Introdueix el nom d'usuari de l'alumne: ");
+        String nomusuari = lector.nextLine();
+        System.out.println("Introdueix la contrasenya de l'usuari alumne: ");
+        String contrasenya = lector.nextLine();
+        System.out.println("Introdueix el nom de l'alumne: ");
         String nomAlumne = lector.nextLine();
         // Introduir el DNI de l'alumne
-        System.out.print("Introdueix el DNI de l'alumne: ");
+        System.out.println("Introdueix el DNI de l'alumne: ");
         String DNI = lector.nextLine();
         // Introduir l'adreça de l'alumne
-        System.out.print("Introdueix l'adreça de l'alumne: ");
+        System.out.println("Introdueix l'adreça de l'alumne: ");
         String adreça = lector.nextLine();
         // Introduir el correu electrònic de l'alumne
-        System.out.print("Introdueix el correu electrònic de l'alumne: ");
+        System.out.println("Introdueix el correu electrònic de l'alumne: ");
         String correu = lector.nextLine();
         // Introduir quantitat de professors i afegir-los a LlistaProfessors
-        System.out.print("Quantitat de professors que te l'alumne: ");
-        int quantitatProfessors = IntroduirInt();
-        for (int i = 0; i < quantitatProfessors; i++) {
-            System.out.print("Introdueix el professor " + (i + 1) + ": ");
-            LlistaProfessors1.add(lector.nextLine());
+        System.out.println("Quantitat de professors que te l'alumne: ");
+        int quantitatProfes = Integer.parseInt(lector.nextLine());
+        String nomprofe = "";
+        for (int i = 0; i < quantitatProfes; i++) {
+            System.out.println("Introdueix el professor " + (i + 1) + ": ");
+            Profe= lector.nextLine();
+            for (int j = 0; j < LlistaProfessors.size(); j++) {
+                Profesor profe = LlistaProfessors.get(j);
+                nomprofe = String.valueOf(profe.getNomProfesor());
+                if(Profe.equals(nomprofe)) {
+                    LlistaProfessors1.add(Profe);
+                    System.out.print("Quantitat d'assignatures que te l'alumne amb aquest professor: ");
+                    int quantitatAssignatures = IntroduirInt();
+                    for (int m = 0; m < quantitatAssignatures; m++) {
+                        System.out.print("Introdueix l'assignatura" + (m + 1) + ": ");
+                        LlistaAssignatura1.add(lector.nextLine());
+                        System.out.print("Introdueix la nota de la assignatura " + (m + 1) + ": ");
+                        LlistaNotes1.add(lector.nextLine());
+                    }
+                }
+                else{
+                    System.out.println("El professor no existeix"+"\n"+
+                            "1. Crear alumne nou"+"\n" +
+                            "2. Cancelar");
+                    c= lector.nextInt();
+                    if(c==1){
+                        InsertarProfessors(LlistaAlumnes,LlistaProfessors,lector);
+                    }
+                    if(c==2){
+                        InsertarAlumnes(LlistaAlumnes,LlistaProfessors,lector);
+                    }}
+            }
         }
         // Introduir quantitat d'assignatures i afegir-les a LlistaAssignatura
-        System.out.print("Quantitat d'assignatures que te l'alumne: ");
-        int quantitatAssignatures = IntroduirInt();
-        for (int i = 0; i < quantitatAssignatures; i++) {
-            System.out.print("Introdueix l'assignatura " + (i + 1) + ": ");
-            LlistaAssignatura1.add(lector.nextLine());
-        }
         // Introduir quantitat de notes i afegir-les a LlistaNotes
-        System.out.print("Quantitat de notes que te l'alumne: ");
-        int quantitatNotes = IntroduirInt();
-        for (int i = 0; i < quantitatNotes; i++) {
-            System.out.print("Introdueix la nota " + (i + 1) + ": ");
-            LlistaNotes1.add(lector.nextLine());
-        }
-        Alumno Alumne = new Alumno(nomAlumne,DNI,adreça,correu,LlistaProfessors1,LlistaAssignatura1,LlistaNotes1);
+        Alumno Alumne = new Alumno(nomusuari,contrasenya,nomAlumne,DNI,adreça,correu,LlistaProfessors1,LlistaAssignatura1,LlistaNotes1);
         LlistaAlumnes.add(Alumne);
         guardarAlumnes(LlistaAlumnes);
     }
     private void ActualitzarAlumnes(ArrayList<Alumno> LlistaAlumnes, Scanner lector) throws IOException {
         System.out.print("Introdueix el DNI de l'alumne que vols actualitzar: ");
         String DNI = lector.nextLine();
+        ArrayList<String> LlistaProfes1 = new ArrayList<>();
+        ArrayList<String> LlistaAssignatures1 = new ArrayList<>();
+        ArrayList<String> LlistaNotes1 = new ArrayList<>();
+
         for (Alumno alumne : LlistaAlumnes) {
             if (alumne.getDNI().equals(DNI)) {
-                System.out.print("Introdueix el nou nom de l'alumne: ");
-                alumne.setNomAlumne(lector.nextLine());
-                guardarAlumnes(LlistaAlumnes);
+                System.out.println("Què vols actualitzar?");
+                System.out.println("1- Nom");
+                System.out.println("2- Adreça");
+                System.out.println("3- Correu electrònic");
+                System.out.println("4- Professors");
+                System.out.println("5- Assignatures");
+                System.out.println("6- Notes");
+                int opcio = IntroduirInt();
+                if (opcio == 1) {
+                    System.out.print("Introdueix el nou nom de l'alumne: ");
+                    alumne.setNomAlumne(lector.nextLine());
+                } else if (opcio == 2) {
+                    System.out.print("Introdueix la nova adreça de l'alumne: ");
+                    alumne.setAdreça(lector.nextLine());
+                } else if (opcio == 3) {
+                    System.out.print("Introdueix el nou correu electrònic de l'alumne: ");
+                    alumne.setCorreu(lector.nextLine());
+                }else if (opcio == 4) {
+                    System.out.println("Lista de alumnos:");
+                    for (int i = 0; i < LlistaAlumnes.size(); i++) {
+                        System.out.println((i + 1) + ". " + LlistaAlumnes.get(i).getLlistaProfessors());
+                    }
+
+                    System.out.print("Ingrese el número del alumno que desea actualizar: ");
+                    int indiceAlumno = Integer.parseInt(lector.nextLine()) - 1;
+
+                    if (indiceAlumno >= 0 && indiceAlumno < LlistaAlumnes.size()) {
+                        Alumno alumno = LlistaAlumnes.get(indiceAlumno);
+                        System.out.println("Lista de profesores asociados a este alumno:");
+                        for (int i = 0; i < alumno.getLlistaProfessors().size(); i++) {
+                            System.out.println((i + 1) + ". " + alumno.getLlistaProfessors().get(i));
+                        }
+
+                        System.out.print("Ingrese el número del profesor que desea actualizar: ");
+                        int indiceProfesor = Integer.parseInt(lector.nextLine()) - 1;
+
+                        if (indiceProfesor >= 0 && indiceProfesor < alumno.getLlistaProfessors().size()) {
+                            System.out.print("Introduzca el nuevo nombre del profesor: ");
+                            String nuevoNombre = lector.nextLine();
+
+                            alumno.getLlistaProfessors().set(indiceProfesor, nuevoNombre);
+                            System.out.println("Nombre del profesor actualizado con éxito.");
+                        } else {
+                            System.out.println("Índice del profesor no válido.");
+                        }
+                    } else {
+                        System.out.println("Índice del alumno no válido.");
+                    }
+
+
+                } else if (opcio == 5) {
+                    System.out.print("Introdueix les assignatures del alumne: ");
+                    LlistaAssignatures1.add(lector.nextLine());
+                    alumne.setLlistaAssignatura(LlistaAssignatures1);
+                } else if (opcio == 6) {
+                    System.out.print("Introdueix les notes del alumne: ");
+                    LlistaNotes1.add(lector.nextLine());
+                    alumne.setLlistaNotes(LlistaNotes1);
+                }else {
+                    System.out.println("Opció no vàlida.");
+                    return;
+                }
+                guardarAlumnes(LlistaAlumnes); // Guardar los cambios en el archivo
                 System.out.println("Dades de l'alumne actualitzades amb èxit.");
                 return;
             }
@@ -293,16 +394,14 @@ public class Main {
                 System.out.println("Correu: " + Profe1.getCorreu());
                 System.out.println("Assignatures que te el professor " + Profe1.getNomProfesor() + " :" + Profe1.getLlistaAssignatures());
                 System.out.println("Alumnes que te el professor " + Profe1.getNomProfesor() + " :" + Profe1.getLlistaAlumnes());
-                System.out.println("Notes que te cada alumne del professor " + Profe1.getNomProfesor() + " :" + Profe1.getLlistaNotes());
                 System.out.println("------------------------------------");
             }
         }
     }
-    private void InsertarProfessors(ArrayList<Profesor> LlistaProfessors,Scanner lector) throws IOException {
+    private void InsertarProfessors(ArrayList<Alumno> LlistaAlumnes,ArrayList<Profesor> LlistaProfessors,Scanner lector) throws IOException {
         String Usuari, Contraseña, nomProfesor, DNI, adreça, correu;
-        ArrayList<String> LlistaAlumnes = new ArrayList<>();
+        ArrayList<String> LlistaAlumnes1 = new ArrayList<>();
         ArrayList<String> LlistaAssignatures = new ArrayList<>();
-        ArrayList<String> LlistaNotes = new ArrayList<>();
         int telefon;
         // Introduir el nom d'usuari
         System.out.print("Introdueix el nom d'usuari: ");
@@ -329,24 +428,33 @@ public class Main {
         System.out.print("Quantitat d'alumnes que vols introduir: ");
         int quantitatAlumnes = Integer.parseInt(lector.nextLine());
         for (int i = 0; i < quantitatAlumnes; i++) {
-            System.out.print("Introdueix l'alumne " + (i + 1) + ": ");
-            LlistaAlumnes.add(lector.nextLine());
+            System.out.print("Introduce el nombre del alumno " + (i + 1) + ": ");
+            String Alumne = lector.nextLine();
+            boolean alumnoYaExiste = false;
+            for (Alumno alumnoExistente : LlistaAlumnes) {
+                String nomAlumne = alumnoExistente.getNomAlumne(); // Suponiendo que getNomAlumne() devuelve el nombre del estudiante como String
+                if (Alumne.equals(nomAlumne)) {
+                    alumnoYaExiste = true;
+                    break;
+                }
+            }
+            if (!alumnoYaExiste) {
+                // El alumno no existe en la lista, procede a añadirlo a LlistaAlumnes1
+                LlistaAlumnes1.add(Alumne);
+                // Llama al método para insertar los detalles del estudiante (asumiendo que InsertarAlumnes() hace eso)
+                InsertarAlumnes(LlistaAlumnes,LlistaProfessors,lector);
+            } else {
+                System.out.println("El alumno ya existe en la lista de estudiantes");
+            }
         }
         // Introduir quantitat d'assignatures i afegir-les a LlistaAssignatures
-        System.out.print("Quantitat d'assignatures que vols introduir: ");
+        System.out.print("Quantitat d'assignatures que tindrar el professor: ");
         int quantitatAssignatures = Integer.parseInt(lector.nextLine());
         for (int i = 0; i < quantitatAssignatures; i++) {
             System.out.print("Introdueix l'assignatura " + (i + 1) + ": ");
             LlistaAssignatures.add(lector.nextLine());
         }
-        // Introduir quantitat de notes i afegir-les a LlistaNotes
-        System.out.print("Quantitat de notes que vols introduir: ");
-        int quantitatNotes = Integer.parseInt(lector.nextLine());
-        for (int i = 0; i < quantitatNotes; i++) {
-            System.out.print("Introdueix la nota " + (i + 1) + ": ");
-            LlistaNotes.add(lector.nextLine());
-        }
-        Profesor Profe1 = new Profesor(Usuari,Contraseña,nomProfesor,DNI,adreça,correu,LlistaAlumnes,LlistaAssignatures,LlistaNotes,telefon);
+        Profesor Profe1 = new Profesor(Usuari,Contraseña,nomProfesor,DNI,adreça,correu,LlistaAlumnes1,LlistaAssignatures,telefon);
         LlistaProfessors.add(Profe1);
         guardarProfessors(LlistaProfessors);
     }
@@ -529,6 +637,18 @@ public class Main {
         }
         oos.close();
         fos.close();
+    }
+    private boolean verificarAlumne(String usuario, String contraseña, ArrayList<Alumno> LlistaAlumnes) {
+        boolean esalumne = false;
+        for (int i = 0; i < LlistaAlumnes.size(); i++) {
+            Alumno Alumne = (Alumno) LlistaAlumnes.get(i);
+            if (usuario.equals(Alumne.getUsuari()) && contraseña.equals(Alumne.getContrasenya())) {
+                esalumne = true;
+            }else{
+                esalumne= false;
+            }
+        }
+        return esalumne;
     }
     private boolean verificarProfessor(String usuario, String contraseña, ArrayList<Profesor> LlistaProfessors) {
         boolean esprofe = false;

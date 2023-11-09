@@ -7,10 +7,9 @@ public class Profesor implements Serializable {
     private String  Usuari,Contraseña,nomProfesor,DNI,adreça,correu;
     private ArrayList<String> LlistaAlumnes = new ArrayList<>();
     private ArrayList<String> LlistaAssignatures = new ArrayList<>();
-    private ArrayList<String> LlistaNotes = new ArrayList<>();
     private int telefon;
 
-    public Profesor(String usuari, String contraseña, String nomProfesor, String DNI, String adreça, String correu, ArrayList<String> llistaAlumnes, ArrayList<String> llistaAssignatures, ArrayList<String> llistaNotes, int telefon) {
+    public Profesor(String usuari, String contraseña, String nomProfesor, String DNI, String adreça, String correu, ArrayList<String> llistaAlumnes, ArrayList<String> llistaAssignatures, int telefon) {
         Usuari = usuari;
         Contraseña = contraseña;
         this.nomProfesor = nomProfesor;
@@ -19,7 +18,6 @@ public class Profesor implements Serializable {
         this.correu = correu;
         LlistaAlumnes = llistaAlumnes;
         LlistaAssignatures = llistaAssignatures;
-        LlistaNotes = llistaNotes;
         this.telefon = telefon;
     }
 
@@ -84,14 +82,6 @@ public class Profesor implements Serializable {
 
     public void setLlistaAssignatures(ArrayList<String> llistaAssignatures) {
         LlistaAssignatures = llistaAssignatures;
-    }
-
-    public ArrayList<String> getLlistaNotes() {
-        return LlistaNotes;
-    }
-
-    public void setLlistaNotes(ArrayList<String> llistaNotes) {
-        LlistaNotes = llistaNotes;
     }
 
     public int getTelefon() {

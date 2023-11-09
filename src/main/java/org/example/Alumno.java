@@ -4,12 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Alumno implements Serializable {
-    private String nomAlumne, DNI, adreça, correu;
+    private String Usuari, contrasenya, nomAlumne, DNI, adreça, correu;
     private ArrayList<String> LlistaProfessors = new ArrayList<>();
     private ArrayList<String> LlistaAssignatura = new ArrayList<>();
     private ArrayList<String> LlistaNotes = new ArrayList<>();
 
-    public Alumno(String nomAlumne, String DNI, String adreça, String correu, ArrayList<String> llistaProfessors, ArrayList<String> llistaAssignatura, ArrayList<String> llistaNotes) {
+    public Alumno(String usuari, String contrasenya, String nomAlumne, String DNI, String adreça, String correu, ArrayList<String> llistaProfessors, ArrayList<String> llistaAssignatura, ArrayList<String> llistaNotes) {
+        Usuari = usuari;
+        this.contrasenya = contrasenya;
         this.nomAlumne = nomAlumne;
         this.DNI = DNI;
         this.adreça = adreça;
@@ -17,6 +19,22 @@ public class Alumno implements Serializable {
         LlistaProfessors = llistaProfessors;
         LlistaAssignatura = llistaAssignatura;
         LlistaNotes = llistaNotes;
+    }
+
+    public String getUsuari() {
+        return Usuari;
+    }
+
+    public void setUsuari(String usuari) {
+        Usuari = usuari;
+    }
+
+    public String getContrasenya() {
+        return contrasenya;
+    }
+
+    public void setContrasenya(String contrasenya) {
+        this.contrasenya = contrasenya;
     }
 
     public String getNomAlumne() {
